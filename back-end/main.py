@@ -20,7 +20,12 @@ def adicionar_produtos(nome: str, categoria: str, valor: float, quantidade: int)
 def listar_produtos(categoria: str):
     listar_produtos(categoria)
 
+#-----------------Atualizar---------------|
 
+@app.get("/atualizar")
+def atualizar_produto(id, novo_valor: float, nova_quantia: int):
+    fun.listar_produto(id, novo_valor, nova_quantia)
+    return{"mensagem" : "Produto atualizado!"}
 
 
 

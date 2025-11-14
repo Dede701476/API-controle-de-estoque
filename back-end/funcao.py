@@ -95,6 +95,5 @@ def atualizar_item(id, novo_preco, nova_quantia):
             cursor.close()
             conexao.close()
 
-atualizar_item(1, 100, 1000)
 
 
