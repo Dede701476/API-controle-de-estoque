@@ -52,14 +52,14 @@ adicionar_produtos("produto", "categoria", 00, 10)
 
 #-----------------LISTAR-----------------|
 
-def listar_produtos(categoria):
+def listar_produtos():
     conexao, cursor = conector()
 
     if conexao:
         try:
             cursor.execute(
-                "SELECT * FROM produtos WHERE categoria = %s ORDER BY id",
-                (categoria,)
+                "SELECT * FROM produtos ORDER BY id",
+                
             )
             return cursor.fetchall()
         
@@ -82,7 +82,7 @@ def atualizar_item(id, novo_preco, nova_quantia):
         try:
             cursor.execute(
                 "UPDATE produtos SET preco = %s, quantidade = %s WHERE id = %s",
-                (id, novo_preco, nova_quantia)
+                (novo_preco, nova_quantia, id)
             )
             conexao.commit()
             if cursor.rowcount > 0:

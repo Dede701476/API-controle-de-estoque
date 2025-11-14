@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import function
+import funcao as fun
 
 app = FastAPI(title="Gerência de Produtos")
 
@@ -7,18 +7,18 @@ app = FastAPI(title="Gerência de Produtos")
 def home():
     return {"mensagem": "Bem-vindo á gerencia de produtos"}
 
-#-------------|ADICIONAR|-------------
+#-------------|CRIAR|-------------
 
-@app.adicionar("/produtos")
+@app.post("/produtos")
 def criar_produto(nome: str, categoria: str, preco: float, quantidade: int):
-    function.cadastrar_produto(nome, categoria, preco, quantidade)
+    fun.adicionar_produtos(nome, categoria, preco, quantidade)
     return {"mensagem": "Produto cadastrado com sucesso!"}
 
-#-------------|LISTAR|--------------
+# #-------------|LISTAR|-------------
 
-@app.listar("/produtos")
+@app.get("/produtos")
 def listar_produtos():
-    produtos = function.listar_produto()
+    produtos = fun.listar_produtos()
     lista = []
 
     for linha in produtos:
@@ -32,26 +32,26 @@ def listar_produtos():
     
     return {"produtos": lista}
 
-#-------------|ATUALIZAR|-------------
+# #-------------|ATUALIZAR|-------------
 
-@app.atualizar("/produtos/{id_produto}")
+@app.put("/produtos/{id_produto}")
 def atualizar_produtos(id_produto: int, novo_preco: float, nova_quantidade: int):
-    produto = function.buscar_produto(id_produto)
+    produto = fun.atualizar_item(id_produto, novo_preco, nova_quantidade)
 
     if produto:
-        function.atualizar_produto(id_produto, novo_preco, nova_quantidade)
-        return {"mensagem": "Produto atualizado com sucesso!"}
-    else:
+        fun.atualizar_produtos(id_produto, novo_preco, nova_quantidade)
         return {"erro": "Produto não encontrado"}
+    else:
+        return {"mensagem": "Produto atualizado com sucesso!"}
     
 #-------------|DELETAR|-------------
 
-@app.deletar("/produtos/{id_produto}")
+@app.delete("/produtos/{id_produto}")
 def deletar_produtos(id_produto: int):
-    produto = function.buscar_produto(id_produto)
+    produto = fun.buscar_produto(id_produto)
 
     if produto:
-        function.deletar_produto(id_produto)
+        fun.deletar_produto(id_produto)
         return {"mensagem": "Produto excluído com sucesso!"}
     else:
         return {"erro": "Produto não encontrado"}
