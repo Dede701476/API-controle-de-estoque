@@ -52,17 +52,49 @@ adicionar_produtos("produto", "categoria", 00, 10)
 
 #-----------------LISTAR-----------------|
 
-def listar_produtos():
+def listar_produtos(categoria):
     conexao, cursor = conector()
+
     if conexao:
         try:
             cursor.execute(
-                "SELECT * FROM produtos ORDER BY ID"
+                "SELECT * FROM produtos WHERE categoria = %s ORDER BY id",
+                (categoria,)
             )
-            return cursor.fetchall()      
+            return cursor.fetchall()
+        
         except Exception as erro:
             print(f"Erro ao tentar exbir produtos: {erro}")
             return []
+        
         finally:
             cursor.close()
             conexao.close()
+
+    else:
+        print("Não foi possivel listar os produtos tente novamente mais tarde!")
+
+#----------------atualizar------------------|
+
+def atualizar_item(id, novo_preco, nova_quantia):
+    conexao, cursor = conector() 
+    if conexao:
+        try:
+            cursor.execute(
+                "UPDATE produtos SET preco = %s, quantidade = %s WHERE id = %s",
+                (id, novo_preco, nova_quantia)
+            )
+            conexao.commit()
+            if cursor.rowcount > 0:
+                print("Produto atualizado com sucesso!")
+            else:
+                print("Nenhum produto encontrado com esse ID.")
+        except Exception as erro:
+            print(f"Erro ao tentar atualizar produto: {erro}")
+        finally:
+            cursor.close()
+            conexao.close()
+
+atualizar_item(1, 100, 1000)
+
+
