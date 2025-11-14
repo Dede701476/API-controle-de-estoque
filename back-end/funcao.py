@@ -2,13 +2,14 @@ from conexao import conector
 
 
 
-#----------------'CRIAR TABELA-----------------|
+#----------------CRIAR TABELA-----------------|
+
 
 def criar_tabela_produtos():
-    conector = conector()
-    if conector:
+    conexao, cursor = conector()
+    if conexao:
         try:
-            cursor = conector.cursor()
+            cursor = conexao.cursor()
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS produtos (
                     id SERIAL PRIMARY KEY,
@@ -18,15 +19,14 @@ def criar_tabela_produtos():
                     quantidade INT
                 );
             """)
-            conector.commit()
+            conexao.commit()
             print("Tabela 'produtos' criada com sucesso!")
-        except Exception as e:
-            print("Erro ao criar a tabela:", e)
+        except Exception as erro:
+            print(f"Erro ao criar a tabela: {erro}")
         finally:
             cursor.close()
-            conector.close()
+            conexao.close()
 
-if __name__ == "__main__":
-    criar_tabela_produtos()
 
+criar_tabela_produtos()
 
