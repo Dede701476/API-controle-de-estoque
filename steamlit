@@ -1,0 +1,91 @@
+import streamlit as st
+import requests
+
+API_URL = "http://127.0.0.1:8000/"
+
+st.set_page_config(page_title="Gerenciamento de Produtos", layout="wide")
+
+st.title("📦 Sistema de Gerenciamento de Estoque")
+
+
+# ---------------- LISTAR PRODUTOS ---------------- #
+
+st.subheader("📋 Lista de Produtos")
+
+if st.button("Carregar Produtos"):
+    response = requests.get(f"{API_URL}/produtos")
+    if response.status_code == 200:
+        dados = response.json()["produtos"]
+        st.table(dados)
+    else:
+        st.error("Erro ao carregar produtos.")
+
+
+# ---------------- ADICIONAR PRODUTO ---------------- #
+
+st.subheader("🆕 Adicionar Produto")
+
+with st.form("form_add"):
+    nome = st.text_input("Nome do Produto")
+    categoria = st.text_input("Categoria")
+    preco = st.number_input("Preço", min_value=0.0, format="%.2f")
+    quantidade = st.number_input("Quantidade", min_value=0)
+
+    enviar = st.form_submit_button("Adicionar")
+
+    if enviar:
+        payload = {
+            "nome": nome,
+            "categoria": categoria,
+            "preco": preco,
+            "quantidade": quantidade
+        }
+
+        resp = requests.post(f"{API_URL}/produtos", params=payload)
+
+        if resp.status_code == 200:
+            st.success("Produto cadastrado com sucesso!")
+        else:
+            st.error("Erro ao cadastrar produto.")
+
+
+# ---------------- ATUALIZAR PRODUTO ---------------- #
+
+st.subheader("✏️ Atualizar Produto")
+
+with st.form("form_update"):
+    id_produto = st.number_input("ID do Produto", min_value=1)
+    novo_preco = st.number_input("Novo Preço", min_value=0.0, format="%.2f")
+    nova_quantidade = st.number_input("Nova Quantidade", min_value=0)
+
+    atualizar = st.form_submit_button("Atualizar")
+
+    if atualizar:
+        params = {
+            "novo_preco": novo_preco,
+            "nova_quantidade": nova_quantidade
+        }
+
+        resp = requests.put(f"{API_URL}/produtos/{id_produto}", params=params)
+
+        if resp.status_code == 200:
+            st.success("Produto atualizado com sucesso.")
+        else:
+            st.error("Erro ao atualizar.")
+
+
+# ---------------- DELETAR PRODUTO ---------------- #
+
+st.subheader("🗑️ Deletar Produto")
+
+with st.form("form_delete"):
+    id_deletar = st.number_input("ID do Produto a deletar", min_value=1)
+    deletar = st.form_submit_button("Excluir")
+
+    if deletar:
+        resp = requests.delete(f"{API_URL}/produtos/{id_deletar}")
+
+        if resp.status_code == 200:
+            st.success("Produto excluído com sucesso.")
+        else:
+            st.error("Erro ao excluir produto.")
