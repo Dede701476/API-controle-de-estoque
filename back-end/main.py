@@ -27,6 +27,14 @@ def atualizar_produto(id, novo_valor: float, nova_quantia: int):
     fun.listar_produto(id, novo_valor, nova_quantia)
     return{"mensagem" : "Produto atualizado!"}
 
+#-----------------Excluir---------------|
+
+@app.get("/deletar")
+def deletar(id: int):
+    fun.deletar_produto(id)
+    return{"mensagem":"produto excluido!"}
+
+
 
 
 
